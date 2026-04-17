@@ -9,12 +9,12 @@ if (!([Security.Principal.WindowsPrincipal][Security.Principal.WindowsIdentity]:
 Add-Type -AssemblyName PresentationFramework
 
 # ==============================================================================
-# XAML - MOTOR VISUAL COMPLETO
+# XAML - MOTOR VISUAL COMPLETO (MAXBOOST FPS)
 # ==============================================================================
 $xaml = @"
 <Window xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-        Title="ULTRA BOOST V1.0 - LITE" Height="900" Width="1450" 
+        Title="MAXBOOST FPS V1.0 - LITE" Height="900" Width="1450" 
         WindowStartupLocation="CenterScreen" Background="#0F0F11" FontFamily="Segoe UI">
     
     <Window.Resources>
@@ -108,7 +108,7 @@ $xaml = @"
         <Border Grid.Row="0" Background="#16161A" BorderBrush="#25252D" BorderThickness="0,0,0,2">
             <Grid Margin="30,0">
                 <StackPanel VerticalAlignment="Center" HorizontalAlignment="Center">
-                    <TextBlock Text="ULTRA BOOST V1.0 LITE" Foreground="#00E5FF" FontSize="32" FontWeight="Black" HorizontalAlignment="Center"/>
+                    <TextBlock Text="MAXBOOST FPS V1.0 LITE" Foreground="#00E5FF" FontSize="32" FontWeight="Black" HorizontalAlignment="Center"/>
                     <TextBlock Text="Engenharia de Performance para W11 e W10 criado por hid1ng" Foreground="#AAAAAA" FontSize="14" FontWeight="SemiBold" HorizontalAlignment="Center" Margin="0,5"/>
                     <TextBlock Text="De Gamer para Gamer" Foreground="LimeGreen" FontSize="16" FontWeight="Bold" FontStyle="Italic" HorizontalAlignment="Center"/>
                 </StackPanel>
@@ -402,7 +402,7 @@ $xaml = @"
                 <Border Background="#16161A" CornerRadius="12" BorderBrush="#FF2A5F" BorderThickness="2" Margin="40" Padding="50" VerticalAlignment="Center" HorizontalAlignment="Center" MaxWidth="800">
                     <StackPanel>
                         <TextBlock Text="⚠️ TERMO DE RESPONSABILIDADE" Foreground="#FF2A5F" FontSize="26" FontWeight="Black" HorizontalAlignment="Center" Margin="0,0,0,20"/>
-                        <TextBlock Text="O Ultra Boost executa alteracoes avancadas de nivel de Kernel e desativa servicos nativos do Windows para maximizar o desempenho em jogos." Foreground="#CCCCCC" FontSize="15" TextWrapping="Wrap" Margin="0,0,0,15" TextAlignment="Center"/>
+                        <TextBlock Text="O MaxBoost FPS executa alteracoes avancadas de nivel de Kernel e desativa servicos nativos do Windows para maximizar o desempenho em jogos." Foreground="#CCCCCC" FontSize="15" TextWrapping="Wrap" Margin="0,0,0,15" TextAlignment="Center"/>
                         <TextBlock Text="O uso inadequado das chaves de otimizacao pode resultar em instabilidade do sistema operacional. A responsabilidade por qualquer dano, perda de dados ou necessidade de formatacao e EXCLUSIVAMENTE SUA." Foreground="#AAAAAA" FontSize="14" FontWeight="SemiBold" TextWrapping="Wrap" Margin="0,0,0,35" TextAlignment="Center"/>
                         
                         <CheckBox Name="chkTerms" Content="Eu li os avisos e assumo todos os riscos sobre o meu hardware e software." Style="{StaticResource ToggleSwitch}" HorizontalAlignment="Center" Margin="0,0,0,30"/>
@@ -498,8 +498,8 @@ $btnDiscordTop.Add_Click({ Start-Process $DiscordLink })
 $window.Add_Closed({ Start-Process $DiscordLink })
 
 $btnRestore.Add_Click({ 
-    Checkpoint-Computer -Description "UltraBoost_Backup" -RestorePointType "MODIFY_SETTINGS" -ErrorAction SilentlyContinue
-    [System.Windows.MessageBox]::Show("Backup criado com sucesso!", "Ultra Boost V1") 
+    Checkpoint-Computer -Description "MaxBoostFPS_Backup" -RestorePointType "MODIFY_SETTINGS" -ErrorAction SilentlyContinue
+    [System.Windows.MessageBox]::Show("Backup criado com sucesso!", "MaxBoost FPS V1") 
 })
 
 # --- INSTALADOR E DEBLOAT ---
@@ -519,14 +519,14 @@ $btnInstall.Add_Click({
     }
     if ($apps.Count -gt 0) {
         foreach ($id in $apps) { Start-Process "winget" -ArgumentList "install --id $id --silent --accept-package-agreements" -Wait -WindowStyle Hidden }
-        [System.Windows.MessageBox]::Show("Instalacoes concluidas!", "Ultra Boost V1")
+        [System.Windows.MessageBox]::Show("Instalacoes concluidas!", "MaxBoost FPS V1")
     }
 })
 $btnApplyDebloat.Add_Click({
     if ($chkDebloatChrome.IsChecked) { reg add "HKLM\SOFTWARE\Policies\Google\Chrome" /v "BackgroundModeEnabled" /t REG_DWORD /d 0 /f | Out-Null } else { reg delete "HKLM\SOFTWARE\Policies\Google\Chrome" /v "BackgroundModeEnabled" /f | Out-Null }
     if ($chkDebloatEdge.IsChecked) { reg add "HKLM\SOFTWARE\Policies\Microsoft\Edge" /v "BackgroundModeEnabled" /t REG_DWORD /d 0 /f | Out-Null } else { reg delete "HKLM\SOFTWARE\Policies\Microsoft\Edge" /v "BackgroundModeEnabled" /f | Out-Null }
     if ($chkDebloatBrave.IsChecked) { reg add "HKLM\SOFTWARE\Policies\BraveSoftware\Brave" /v "BackgroundModeEnabled" /t REG_DWORD /d 0 /f | Out-Null } else { reg delete "HKLM\SOFTWARE\Policies\BraveSoftware\Brave" /v "BackgroundModeEnabled" /f | Out-Null }
-    [System.Windows.MessageBox]::Show("Debloat de Navegadores atualizado conforme as chaves.", "Sucesso")
+    [System.Windows.MessageBox]::Show("Debloat de Navegadores atualizado conforme as chaves.", "MaxBoost FPS V1")
 })
 
 # --- WINDOWS TWEAKS COMPLETOS ---
@@ -546,7 +546,7 @@ $btnApplyTweaks.Add_Click({
             }
         }
     }
-    [System.Windows.MessageBox]::Show("Chaves ligadas = Otimizado. Chaves desligadas = Padrao Microsoft.", "Sucesso")
+    [System.Windows.MessageBox]::Show("Chaves ligadas = Otimizado. Chaves desligadas = Padrao Microsoft.", "MaxBoost FPS V1")
 })
 
 $btnResetAllTweaks.Add_Click({
@@ -560,7 +560,7 @@ $btnApplyVisuals.Add_Click({
     if ($chkTaskbarLeft.IsChecked) { reg add "HKCU\Software\Microsoft\Windows\CurrentVersion\Explorer\Advanced" /v "TaskbarAl" /t REG_DWORD /d 0 /f | Out-Null } else { reg add "HKCU\Software\Microsoft\Windows\CurrentVersion\Explorer\Advanced" /v "TaskbarAl" /t REG_DWORD /d 1 /f | Out-Null }
     if ($chkTransparence.IsChecked) { reg add "HKCU\SOFTWARE\Microsoft\Windows\CurrentVersion\Themes\Personalize" /v "EnableTransparency" /t REG_DWORD /d 0 /f | Out-Null } else { reg add "HKCU\SOFTWARE\Microsoft\Windows\CurrentVersion\Themes\Personalize" /v "EnableTransparency" /t REG_DWORD /d 1 /f | Out-Null }
     if ($chkWidgets.IsChecked) { reg add "HKCU\Software\Microsoft\Windows\CurrentVersion\Explorer\Advanced" /v "TaskbarDa" /t REG_DWORD /d 0 /f | Out-Null } else { reg add "HKCU\Software\Microsoft\Windows\CurrentVersion\Explorer\Advanced" /v "TaskbarDa" /t REG_DWORD /d 1 /f | Out-Null }
-    [System.Windows.MessageBox]::Show("Configuracoes visuais aplicadas.", "Sucesso")
+    [System.Windows.MessageBox]::Show("Configuracoes visuais aplicadas.", "MaxBoost FPS V1")
 })
 $btnResetVisuals.Add_Click({
     $chkDarkMode.IsChecked = $false; $chkTaskbarLeft.IsChecked = $false; $chkTransparence.IsChecked = $false; $chkWidgets.IsChecked = $false
@@ -586,7 +586,7 @@ $btnApplyCleanup.Add_Click({
     }
     if ($chkCleanMgr.IsChecked) { Start-Process "cleanmgr.exe" }
 
-    [System.Windows.MessageBox]::Show("Procedimentos de Limpeza concluidos com sucesso!", "Ultra Boost V1")
+    [System.Windows.MessageBox]::Show("Procedimentos de Limpeza concluidos com sucesso!", "MaxBoost FPS V1")
 })
 
 $btnClearCleanupSelection.Add_Click({
@@ -601,6 +601,6 @@ $btnClearCleanupSelection.Add_Click({
 $btnControlPanel.Add_Click({ Start-Process "control" })
 $btnNetworkPanel.Add_Click({ Start-Process "ncpa.cpl" })
 $btnSoundPanel.Add_Click({ Start-Process "mmsys.cpl" })
-$btnResetNetwork.Add_Click({ Start-Process "cmd.exe" -ArgumentList "/c ipconfig /flushdns & netsh winsock reset" -WindowStyle Hidden; [System.Windows.MessageBox]::Show("DNS e Rede resetados.", "Concluido") })
+$btnResetNetwork.Add_Click({ Start-Process "cmd.exe" -ArgumentList "/c ipconfig /flushdns & netsh winsock reset" -WindowStyle Hidden; [System.Windows.MessageBox]::Show("DNS e Rede resetados.", "MaxBoost FPS V1") })
 
 $window.ShowDialog() | Out-Null
