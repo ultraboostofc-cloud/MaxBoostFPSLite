@@ -1,5 +1,5 @@
 # ==============================================================================
-# AUTO-ELEVAÇÃO PARA ADMINISTRADOR (OBRIGATÓRIO PARA TWEAKS E LIMPEZA)
+# AUTO-ELEVAÇÃO PARA ADMINISTRADOR (OBRIGATÓRIO)
 # ==============================================================================
 if (!([Security.Principal.WindowsPrincipal][Security.Principal.WindowsIdentity]::GetCurrent()).IsInRole([Security.Principal.WindowsBuiltInRole]::Administrator)) {
     Start-Process powershell.exe -ArgumentList "-NoProfile -ExecutionPolicy Bypass -WindowStyle Hidden -File `"$PSCommandPath`"" -Verb RunAs
@@ -9,7 +9,7 @@ if (!([Security.Principal.WindowsPrincipal][Security.Principal.WindowsIdentity]:
 Add-Type -AssemblyName PresentationFramework
 
 # ==============================================================================
-# XAML - MOTOR VISUAL COMPLETO 
+# XAML - MOTOR VISUAL COMPLETO
 # ==============================================================================
 $xaml = @"
 <Window xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
@@ -115,13 +115,12 @@ $xaml = @"
                 
                 <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" VerticalAlignment="Top" Margin="0,20,0,0">
                     <Button Name="btnRestore" Content="CRIAR PONTO DE RESTAURACAO" Width="220" Height="35" Background="#FFB000" Foreground="Black" Margin="0,0,10,0"/>
-                    <Button Name="btnPremium" Content="DESBLOQUEAR PREMIUM" Width="180" Height="35" Background="#FF2A5F"/>
+                    <Button Name="btnDiscordTop" Content="ENTRAR NO DISCORD" Width="180" Height="35" Background="#5865F2"/>
                 </StackPanel>
             </Grid>
         </Border>
 
         <Grid Grid.Row="1">
-            
             <TabControl Background="#0F0F11" BorderThickness="0" Margin="20,15,20,20">
                 
                 <TabItem Header="TUTORIAL">
@@ -168,7 +167,6 @@ $xaml = @"
                                     <CheckBox Content="Google Chrome" Tag="Google.Chrome" Style="{StaticResource NormalCheck}"/>
                                     <CheckBox Content="Opera GX" Tag="Opera.OperaGX" Style="{StaticResource NormalCheck}"/>
                                     <CheckBox Content="Mozilla Firefox" Tag="Mozilla.Firefox" Style="{StaticResource NormalCheck}"/>
-                                    <CheckBox Content="Microsoft Edge" Tag="Microsoft.Edge" Style="{StaticResource NormalCheck}"/>
                                 </StackPanel></Border>
                                 <Border Background="#1C1C21" CornerRadius="12" Padding="20" Margin="0,0,15,15"><StackPanel>
                                     <TextBlock Text="Jogos e Launchers" Style="{StaticResource CardTitle}" Foreground="#FF2A5F"/>
@@ -426,18 +424,18 @@ $xaml = @"
 "@
 
 # ==============================================================================
-# LÓGICA DO POWERSHELL
+# LÓGICA DO POWERSHELL COMPLETA
 # ==============================================================================
 try { $window = [Windows.Markup.XamlReader]::Parse($xaml) } catch { exit }
 
-# Mapeamentos
+# Mapeamentos UI
 $TermsOverlay = $window.FindName("TermsOverlay")
 $chkTerms = $window.FindName("chkTerms")
 $txtTerms = $window.FindName("txtTerms")
 $btnUnlock = $window.FindName("btnUnlock")
-
+$btnDiscordTop = $window.FindName("btnDiscordTop")
 $btnRestore = $window.FindName("btnRestore")
-$btnPremium = $window.FindName("btnPremium")
+
 $btnInstall = $window.FindName("btnInstall")
 $btnClear = $window.FindName("btnClear")
 $InstallWrapPanel = $window.FindName("InstallWrapPanel")
@@ -494,12 +492,17 @@ $chkTerms.Add_Click($ValidateTerms)
 $txtTerms.Add_TextChanged($ValidateTerms)
 $btnUnlock.Add_Click({ $TermsOverlay.Visibility = "Collapsed" })
 
-# --- CABECALHO ---
-$btnRestore.Add_Click({ Checkpoint-Computer -Description "UltraBoost_Backup" -RestorePointType "MODIFY_SETTINGS" -ErrorAction SilentlyContinue; [System.Windows.MessageBox]::Show("Backup criado com sucesso!", "Ultra Boost") })
-$btnPremium.Add_Click({ Start-Process "https://seusite.com.br" })
-$window.Add_Closed({ Start-Process "https://seusite.com.br" })
+# --- LINK DO DISCORD E CABEÇALHO ---
+$DiscordLink = "https://discord.gg/f44HUFWbSS"
+$btnDiscordTop.Add_Click({ Start-Process $DiscordLink })
+$window.Add_Closed({ Start-Process $DiscordLink })
 
-# --- INSTALADOR ---
+$btnRestore.Add_Click({ 
+    Checkpoint-Computer -Description "UltraBoost_Backup" -RestorePointType "MODIFY_SETTINGS" -ErrorAction SilentlyContinue
+    [System.Windows.MessageBox]::Show("Backup criado com sucesso!", "Ultra Boost V1") 
+})
+
+# --- INSTALADOR E DEBLOAT ---
 $btnClear.Add_Click({
     foreach ($card in $InstallWrapPanel.Children) {
         if ($card.GetType().Name -eq "Border") {
@@ -516,10 +519,9 @@ $btnInstall.Add_Click({
     }
     if ($apps.Count -gt 0) {
         foreach ($id in $apps) { Start-Process "winget" -ArgumentList "install --id $id --silent --accept-package-agreements" -Wait -WindowStyle Hidden }
-        [System.Windows.MessageBox]::Show("Instalacoes concluidas!", "Ultra Boost")
+        [System.Windows.MessageBox]::Show("Instalacoes concluidas!", "Ultra Boost V1")
     }
 })
-
 $btnApplyDebloat.Add_Click({
     if ($chkDebloatChrome.IsChecked) { reg add "HKLM\SOFTWARE\Policies\Google\Chrome" /v "BackgroundModeEnabled" /t REG_DWORD /d 0 /f | Out-Null } else { reg delete "HKLM\SOFTWARE\Policies\Google\Chrome" /v "BackgroundModeEnabled" /f | Out-Null }
     if ($chkDebloatEdge.IsChecked) { reg add "HKLM\SOFTWARE\Policies\Microsoft\Edge" /v "BackgroundModeEnabled" /t REG_DWORD /d 0 /f | Out-Null } else { reg delete "HKLM\SOFTWARE\Policies\Microsoft\Edge" /v "BackgroundModeEnabled" /f | Out-Null }
@@ -527,7 +529,7 @@ $btnApplyDebloat.Add_Click({
     [System.Windows.MessageBox]::Show("Debloat de Navegadores atualizado conforme as chaves.", "Sucesso")
 })
 
-# --- TWEAKS E LIGA/DESLIGA ---
+# --- WINDOWS TWEAKS COMPLETOS ---
 $btnApplyTweaks.Add_Click({
     if ($chkPriority.IsChecked) { reg add "HKLM\SYSTEM\CurrentControlSet\Control\PriorityControl" /v "Win32PrioritySeparation" /t REG_DWORD /d 38 /f | Out-Null } else { reg add "HKLM\SYSTEM\CurrentControlSet\Control\PriorityControl" /v "Win32PrioritySeparation" /t REG_DWORD /d 2 /f | Out-Null }
     if ($chkFastKill.IsChecked) { reg add "HKCU\Control Panel\Desktop" /v "AutoEndTasks" /t REG_SZ /d "1" /f | Out-Null } else { reg add "HKCU\Control Panel\Desktop" /v "AutoEndTasks" /t REG_SZ /d "0" /f | Out-Null }
@@ -552,7 +554,7 @@ $btnResetAllTweaks.Add_Click({
     foreach ($coluna in $ServicesPanel.Children) { foreach ($servico in $coluna.Children) { $servico.IsChecked = $false } }
 })
 
-# --- PERSONALIZACAO LIGA/DESLIGA ---
+# --- PERSONALIZACAO ---
 $btnApplyVisuals.Add_Click({
     if ($chkDarkMode.IsChecked) { reg add "HKCU\SOFTWARE\Microsoft\Windows\CurrentVersion\Themes\Personalize" /v "AppsUseLightTheme" /t REG_DWORD /d 0 /f | Out-Null; reg add "HKCU\SOFTWARE\Microsoft\Windows\CurrentVersion\Themes\Personalize" /v "SystemUsesLightTheme" /t REG_DWORD /d 0 /f | Out-Null } else { reg add "HKCU\SOFTWARE\Microsoft\Windows\CurrentVersion\Themes\Personalize" /v "AppsUseLightTheme" /t REG_DWORD /d 1 /f | Out-Null; reg add "HKCU\SOFTWARE\Microsoft\Windows\CurrentVersion\Themes\Personalize" /v "SystemUsesLightTheme" /t REG_DWORD /d 1 /f | Out-Null }
     if ($chkTaskbarLeft.IsChecked) { reg add "HKCU\Software\Microsoft\Windows\CurrentVersion\Explorer\Advanced" /v "TaskbarAl" /t REG_DWORD /d 0 /f | Out-Null } else { reg add "HKCU\Software\Microsoft\Windows\CurrentVersion\Explorer\Advanced" /v "TaskbarAl" /t REG_DWORD /d 1 /f | Out-Null }
@@ -560,12 +562,11 @@ $btnApplyVisuals.Add_Click({
     if ($chkWidgets.IsChecked) { reg add "HKCU\Software\Microsoft\Windows\CurrentVersion\Explorer\Advanced" /v "TaskbarDa" /t REG_DWORD /d 0 /f | Out-Null } else { reg add "HKCU\Software\Microsoft\Windows\CurrentVersion\Explorer\Advanced" /v "TaskbarDa" /t REG_DWORD /d 1 /f | Out-Null }
     [System.Windows.MessageBox]::Show("Configuracoes visuais aplicadas.", "Sucesso")
 })
-
 $btnResetVisuals.Add_Click({
     $chkDarkMode.IsChecked = $false; $chkTaskbarLeft.IsChecked = $false; $chkTransparence.IsChecked = $false; $chkWidgets.IsChecked = $false
 })
 
-# --- LIMPEZA SILENCIOSA E EFICAZ ---
+# --- LIMPEZA (CLEANUP) SILENCIOSA ---
 $btnApplyCleanup.Add_Click({
     if ($chkCleanTemp.IsChecked) {
         Remove-Item -Path "$env:TEMP\*" -Recurse -Force -ErrorAction SilentlyContinue
@@ -577,7 +578,6 @@ $btnApplyCleanup.Add_Click({
     if ($chkCleanSpotify.IsChecked) { Remove-Item -Path "$env:LOCALAPPDATA\Spotify\Storage\*" -Recurse -Force -ErrorAction SilentlyContinue }
     if ($chkCleanDirectX.IsChecked) { Remove-Item -Path "$env:LOCALAPPDATA\D3DSCache\*" -Recurse -Force -ErrorAction SilentlyContinue }
     
-    # O SUPRESSOR DE ERROS DO LOG (2>$null)
     if ($chkCleanLogs.IsChecked) { wevtutil el | Foreach-Object { wevtutil cl "$_" 2>$null } }
     
     if ($chkShowHiddenDev.IsChecked) {
@@ -586,7 +586,7 @@ $btnApplyCleanup.Add_Click({
     }
     if ($chkCleanMgr.IsChecked) { Start-Process "cleanmgr.exe" }
 
-    [System.Windows.MessageBox]::Show("Procedimentos de Limpeza concluidos de forma 100% silenciosa e segura!", "Ultra Boost V1")
+    [System.Windows.MessageBox]::Show("Procedimentos de Limpeza concluidos com sucesso!", "Ultra Boost V1")
 })
 
 $btnClearCleanupSelection.Add_Click({
@@ -597,7 +597,7 @@ $btnClearCleanupSelection.Add_Click({
     }
 })
 
-# --- CONFIG EXTRAS ---
+# --- CONFIGURAÇÕES EXTRAS ---
 $btnControlPanel.Add_Click({ Start-Process "control" })
 $btnNetworkPanel.Add_Click({ Start-Process "ncpa.cpl" })
 $btnSoundPanel.Add_Click({ Start-Process "mmsys.cpl" })
